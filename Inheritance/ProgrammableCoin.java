@@ -1,15 +1,14 @@
 package Inheritance;
 
-
 public class ProgrammableCoin extends CryptoCurrency
 {
     private String script = "";
-    ProgrammableCoin(String name)
+    public ProgrammableCoin(String name)
     {
         super(name);
     }
 
-    ProgrammableCoin(String name, String symbol, String description, int circulatingSupply, int marketCap)
+    public ProgrammableCoin(String name, String symbol, String description, int circulatingSupply, int marketCap)
     {
         super(name, symbol, description, circulatingSupply, marketCap);
     }
@@ -28,24 +27,19 @@ public class ProgrammableCoin extends CryptoCurrency
     public String toString()
     {
         String results = "";
-        results += formatInstanceData();
+        results += super.toString();
         results += "Script:\n"+getScript()+"\n\n";
-        results += divdingLine();
+        results += CryptoCurrency.getDividingLine();
         return results;
     }
-
-
+    
     @Override
     public boolean equals(Object object)
     {
         if(object instanceof ProgrammableCoin)
         {
-            ProgrammableCoin pc = (ProgrammableCoin) object;
-            return allDataSame(pc.getName(), pc.getSymbol(), pc.getDescription(), pc.getCirculatingSupply(), pc.getMarketCap());
+            return super.equals(object);
         }
-        else
-        {
-            return false;
-        }
+        return false;
     }
 }
