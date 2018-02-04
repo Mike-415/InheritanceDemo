@@ -1,7 +1,6 @@
 package Inheritance;
 
-import java.util.ArrayList;
-
+import java.util.Arrays;
 
 public class CryptoCurrencyImplementer
 {
@@ -10,8 +9,8 @@ public class CryptoCurrencyImplementer
         ProgrammableCoin programmableCoin = new ProgrammableCoin("AdaCoin");
         programmableCoin.setSymbol("ADA");
         programmableCoin.setDescription("Decentralized applications using block-chain technology");
-        programmableCoin.setCirculatingSupply(1000000);
-        programmableCoin.setMarketCap(9000000);
+        programmableCoin.setCirculatingSupply(1000055500);
+        programmableCoin.setMarketCap(90000000000L);
         programmableCoin.setScript("if(coffeeLow())\n{\n\tgetJava();\n}");
         return programmableCoin;
     }
@@ -22,7 +21,7 @@ public class CryptoCurrencyImplementer
         anonymousCoin.setSymbol("SHH");
         anonymousCoin.setDescription("Anonymous peer-to-peer transactions");
         anonymousCoin.setCirculatingSupply(200000);
-        anonymousCoin.setMarketCap(9999999);
+        anonymousCoin.setMarketCap(999999999);
         return anonymousCoin;
     }
 
@@ -36,24 +35,50 @@ public class CryptoCurrencyImplementer
         lotteryCoin.setLuckyNumber(1234567);
         return lotteryCoin;
     }
+    private static String arrToStr(CryptoCurrency[] cryptoArray)
+    {
+        String results = "";
+        for(int i = 0; i < cryptoArray.length; i++)
+        {
+            //Used to vertically align the prices
+            if(cryptoArray[i].getName().length() >8)
+            {
+                results += "\t-"+cryptoArray[i].getName()+": "+cryptoArray[i].getPrice()+"\n";
+            }
+            else
+            {
+                results += "\t-"+cryptoArray[i].getName()+": \t"+cryptoArray[i].getPrice()+"\n";
+            }
+
+        }
+        return results;
+    }
+
+    private static void beforeAfterSorting(CryptoCurrency[] cryptoArray)
+    {
+        System.out.println("Before the sort:");
+        System.out.println(arrToStr(cryptoArray));
+        Arrays.sort(cryptoArray);
+        System.out.println("After the sort:");
+        System.out.println(arrToStr(cryptoArray));
+    }
 
     public static void main(String[] args)
     {
-        ArrayList<CryptoCurrency> coinList = new ArrayList<>();
-
         ProgrammableCoin programmableCoin = getProgrammableCoin();
         AnonymousCoin anonymousCoin = getAnonymousCoin();
         LotteryCoin lotteryCoin = getLotteryCoin();
 
-        coinList.add(programmableCoin);
-        coinList.add(anonymousCoin);
-        coinList.add(lotteryCoin);
+        CryptoCurrency[] cryptoArray = { programmableCoin, anonymousCoin, lotteryCoin };
 
-        System.out.println();
-        for(CryptoCurrency coin : coinList)
+        System.out.println(CryptoCurrency.getDividingLine());
+        for(CryptoCurrency coin : cryptoArray)
         {
             System.out.println(coin);
         }
-
+        System.out.println("\nTotal market capitalization: "+CryptoCurrency.getTotalMarketCap()+"\n");
+        beforeAfterSorting(cryptoArray);
+        System.out.println(CryptoCurrency.getDividingLine());
     }
 }
+
