@@ -1,21 +1,44 @@
 package Inheritance;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
-import java.text.DecimalFormat;
-
-
-public class CryptoCurrency
+//M2 HOMEWORK COMPARABLE INTERFACE IMPLEMENTATION ON ProgrammableCoin.java FILE
+public class CryptoCurrency implements Comparable<CryptoCurrency>
 {
-    public static String DEFAULT_STRING = "";
-    public static int DEFAULT_INT = 0;
+    //M2 HOMEWORK STATIC VARIABLES
+
+    public static final String DEFAULT_STRING = "";
+    public static final int DEFAULT_INT = 0;
+    //QUESTION: Why does Professor Masters want the DIVIDING_LINE to be private???
+    private static final String DIVIDING_LINE = "\n-----------------------------------------------------------------------------------\n";
+    private static long totalMarketCap = 0;
+    private boolean singleParameterConstructorCalled = false;
+    private CapSize capSize;
     private String name, symbol, description;
-    private int circulatingSupply, marketCap;
-    private double price;
+    private long circulatingSupply, marketCap;
+    private BigDecimal price;
 
+    //M2 HOMEWORK ENUM
+    public enum CapSize
+    {
+        LARGE("Large"), MID("Mid"), SMALL("Small"), MICRO("Micro");
+        private String fullName;
+        private CapSize(String fullName)
+        {
+            this.fullName = fullName;
+        }
+        public String getFullName()
+        {
+            return fullName;
+        }
 
+    }
 
     public CryptoCurrency(String name)
     {
+
         this(name, DEFAULT_STRING, DEFAULT_STRING, DEFAULT_INT, DEFAULT_INT);
+        singleParameterConstructorCalled = true;
     }
 
     public CryptoCurrency(String name, String symbol, String description, int circulatingSupply, int marketCap)
@@ -26,6 +49,10 @@ public class CryptoCurrency
         this.circulatingSupply = circulatingSupply;
         this.marketCap = marketCap;
 
+        //REMINDER: Remember (in your driver class) that you start with the single parameter constructor
+        //The other values were filled with the default values.
+        //This is why calculating the price in the constructor was erroneous
+        //SOLUTION: Use the boolean variable singleParameterConstructorCalled as a flag.
     }
 
     public String getName()
@@ -37,12 +64,7 @@ public class CryptoCurrency
     {
         this.name = name;
     }
-
-    public boolean testName(String name2)
-    {
-        return getName().equalsIgnoreCase(name2);
-    }
-
+    
     public String getSymbol()
     {
         return symbol;
@@ -51,11 +73,6 @@ public class CryptoCurrency
     public void setSymbol(String symbol)
     {
         this.symbol = symbol.toUpperCase();
-    }
-
-    public boolean testSymbol(String symbol2)
-    {
-        return getSymbol().equalsIgnoreCase(symbol2);
     }
 
     public String getDescription()
@@ -67,87 +84,127 @@ public class CryptoCurrency
     {
         this.description = description;
     }
-
-    public boolean testDescription(String description2)
-    {
-        return getDescription().equalsIgnoreCase(description2);
-    }
-
-    public int getCirculatingSupply()
+    
+    public long getCirculatingSupply()
     {
         return circulatingSupply;
     }
 
-    public void setCirculatingSupply(int circulatingSupply)
+    public void setCirculatingSupply(long circulatingSupply)
     {
         this.circulatingSupply = circulatingSupply;
     }
 
-    public boolean testCirculatingSupply(int circulatingSupply2)
-    {
-        return getCirculatingSupply() == circulatingSupply2;
-    }
-
-    public int getMarketCap()
+    public long getMarketCap()
     {
         return marketCap;
     }
 
-    public void setMarketCap(int marketCap)
+    public void setMarketCap(long marketCap)
     {
         this.marketCap = marketCap;
     }
 
-    public boolean testMarketCap(int marketCap2)
+    public CapSize getCapSize()
     {
-        return getMarketCap() == marketCap2;
+        return capSize;
+    }
+    public void calculateCapSize()
+    {
+        if( getMarketCap()>= 10000000000L)
+        {
+            capSize = CapSize.LARGE;
+        }
+        else if(getMarketCap() < 10000000000L && getMarketCap() >= 2000000000)
+        {
+            capSize = CapSize.MID;
+        }
+        else if(getMarketCap() < 2000000000 && getMarketCap() >= 250000000)
+        {
+            capSize = CapSize.SMALL;
+        }
+        else
+        {
+            capSize = CapSize.MICRO;
+        }
     }
 
-
-    public double getPrice()
+    //M2 HOMEWORK STATIC METHOD
+    public static long getTotalMarketCap()
     {
-        setPrice(getMarketCap(), getCirculatingSupply());
+        return totalMarketCap;
+    }
+
+    public BigDecimal getPrice()
+    {
+        if(singleParameterConstructorCalled)
+        {
+            calculatePrice(getMarketCap(), getCirculatingSupply());
+        }
         return price;
-
     }
 
-    public String divdingLine()
+
+    private void calculatePrice(long marketCap, long circulatingSupply)
     {
-        return "\n-----------------------------------------------------------------------------------\n\n";
+        BigDecimal mrkCap = new BigDecimal(Long.toString(marketCap));
+        BigDecimal crcSup = new BigDecimal(Long.toString(circulatingSupply));
+        this.price = mrkCap.divide(crcSup, 2, RoundingMode.HALF_EVEN);
+
+    }
+    
+    public static String getDividingLine()
+    {
+        return DIVIDING_LINE;
     }
 
-    private void setPrice(int marketCap, int circulatingSupply)
+    @Override
+    public boolean equals(Object object)
     {
-        double mrkCap = (double)marketCap;
-        double crcSup = (double)circulatingSupply;
-        double price = mrkCap/crcSup;
-        this.price =  price;
+        if(object instanceof CryptoCurrency)
+        {
+            CryptoCurrency otherCurrency = (CryptoCurrency)object;
+            boolean sameName = getName().equalsIgnoreCase(otherCurrency.getName());
+            boolean sameSymbol =  getSymbol().equalsIgnoreCase(otherCurrency.getSymbol());
+            boolean sameDescription = getDescription().equalsIgnoreCase(otherCurrency.getDescription());
+            boolean sameCirculatingSupply = getCirculatingSupply() == otherCurrency.getCirculatingSupply();
+            boolean sameMarketCap = getMarketCap() == otherCurrency.getMarketCap();
+            return sameName && sameSymbol && sameDescription && sameCirculatingSupply && sameMarketCap;
+        }
+        return false;
     }
 
-    public boolean allDataSame(String name2, String symbol2, String description2, int circulatingSupply2, int marketCap2)
+    @Override
+    public String toString()
     {
-        boolean sameName = testName(name2);
-        boolean sameSymbol = testSymbol(symbol2);
-        boolean sameDescription = testDescription(description2);
-        boolean sameCirculatingSupply = testCirculatingSupply(circulatingSupply2);
-        boolean sameMarketCap = testMarketCap(marketCap2);
-        return sameName && sameSymbol && sameDescription && sameCirculatingSupply && sameMarketCap;
-    }
-
-    public String formatInstanceData()
-    {
+        calculateCapSize();
+        CryptoCurrency.totalMarketCap += marketCap;
         String results = "";
-        DecimalFormat formatter = new DecimalFormat("#0.00");
         results += "Name:\t\t\t\t"+getName()+"\n";
         results += "Symbol:\t\t\t\t"+getSymbol()+"\n";
         results += "Description:\t\t"+getDescription()+"\n";
         results += "Circulating Supply:\t"+getCirculatingSupply()+"\n";
         results += "Market Cap:\t\t\t"+getMarketCap()+"\n";
-        results += "Price:\t\t\t\t"+formatter.format(getPrice())+"\n";
+        //M2 HOMEWORK ENUM USE
+        results += "Cap size:\t\t\t"+getCapSize().getFullName()+"\n";
+        results += "Price:\t\t\t\t"+getPrice()+"\n";
         return results;
     }
-
-
-
-
+    
+    @Override
+    public int compareTo(CryptoCurrency otherCoin)
+    {
+        if(this.getPrice().compareTo(otherCoin.getPrice()) < 0 )
+        {
+            return -1;
+        }
+        else if(this.getPrice().compareTo(otherCoin.getPrice()) > 0)
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
+    }
 }
