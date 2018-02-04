@@ -1,6 +1,5 @@
 package Inheritance;
 
-
 public class AnonymousCoin extends CryptoCurrency
 {
 
@@ -22,28 +21,19 @@ public class AnonymousCoin extends CryptoCurrency
     public String toString()
     {
         String results = "";
-        results += formatInstanceData();
-        //results += "Script:\t"+getScript()+"\n\n";
+        results += super.toString();
         results += "Hash algorithm:\t\t"+getHashingAlgoType()+"\n\n";
-        results += divdingLine();
+        results += CryptoCurrency.getDividingLine();
         return results;
     }
-
-
-
+    
     @Override
     public boolean equals(Object object)
     {
         if(object instanceof AnonymousCoin)
         {
-            AnonymousCoin ac = (AnonymousCoin) object;
-            return allDataSame(ac.getName(), ac.getSymbol(), ac.getDescription(),
-                    ac.getCirculatingSupply(), ac.getMarketCap());
+            return super.equals(object);
         }
-        else
-        {
-            return false;
-        }
+        return false;
     }
-
 }
