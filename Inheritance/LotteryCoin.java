@@ -5,7 +5,7 @@ import java.util.Random;
 
 public class LotteryCoin extends CryptoCurrency
 {
-    int luckyNumber;
+    private int luckyNumber;
     public LotteryCoin(String name)
     {
         super(name);
@@ -14,7 +14,7 @@ public class LotteryCoin extends CryptoCurrency
     public LotteryCoin(String name, String symbol, String description, int circulatingSupply, int marketCap)
     {
         super(name, symbol, description, circulatingSupply, marketCap);
-        luckyNumber = DEFAULT_INT;
+        luckyNumber = CryptoCurrency.DEFAULT_INT;
     }
 
     public void setLuckyNumber(int sevenDigitNumber)
@@ -47,34 +47,28 @@ public class LotteryCoin extends CryptoCurrency
         {
             results += "\n\tPlease try again.\n";
         }
-        results += divdingLine();
+        results += CryptoCurrency.getDividingLine();
         return results;
     }
-
-
-
-
+    
     @Override
     public boolean equals(Object object)
     {
         if(object instanceof LotteryCoin)
         {
-            LotteryCoin l = (LotteryCoin) object;
-            return allDataSame(l.getName(), l.getSymbol(), l.getDescription(), l.getCirculatingSupply(), l.getMarketCap());
+            return super.equals(object);
         }
-        else
-        {
-            return false;
-        }
+        return false;
     }
 
     @Override
     public String toString()
     {
         String results = "";
-        results += formatInstanceData();
+        results += super.toString();
         results += playLotto();
         return results;
     }
 
 }
+
