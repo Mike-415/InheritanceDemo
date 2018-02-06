@@ -41,7 +41,7 @@ public class CryptoCurrency implements Comparable<CryptoCurrency>
         singleParameterConstructorCalled = true;
     }
 
-    public CryptoCurrency(String name, String symbol, String description, int circulatingSupply, int marketCap)
+    public CryptoCurrency(String name, String symbol, String description, long circulatingSupply, long marketCap)
     {
         this.name = name;
         this.symbol = symbol;
